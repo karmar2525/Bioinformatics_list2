@@ -406,9 +406,13 @@ def main():
     parser.add_argument('--path', type=int, default=1)
     args = parser.parse_args()
 
-    seq_a, seq_b = read_sequence_from_file(args.src_file) if args.src_file and os.path.exists(args.src_file) else manual_input()
+    seq_a, seq_b = read_sequence_from_file(args.src_file) if args.src_file and os.path.exists(
+        args.src_file) else manual_input()
     matrix = fill_matrix(seq_a, seq_b, args.gap, args.match, args.mismatch)
-    alignment_a, alignment_b, path_coords, all_paths = traceback(seq_a, seq_b, matrix, args.gap, args.match, args.mismatch, args.path)
+    alignment_a, alignment_b, path_coords, all_paths = traceback(seq_a, seq_b, matrix, args.gap, args.match,
+                                                                 args.mismatch, args.path)
+
+    plot_matrix(matrix, seq_a, seq_b, path_coords, f"Selected Alignment Path (Path {args.path})", "")
 
     match = sum(1 for x, y in zip(alignment_a, alignment_b) if x == y)
     gaps = alignment_a.count('-') + alignment_b.count('-')
@@ -417,7 +421,6 @@ def main():
 
     save_alignment_to_file(alignment_a, alignment_b, match, gaps, identity)
     generate_pdf(seq_a, seq_b, alignment_a, alignment_b, stats, f"Path {args.path}", all_paths, path_coords)
-    select_and_plot_path(matrix, seq_a, seq_b, all_paths)
 
 if __name__ == "__main__":
     main()
